@@ -1,4 +1,5 @@
 var request = require('request');
+var fs = require('fs');
 
 const GITHUB_USER = "JohnTheScout";
 const GITHUB_TOKEN = "b33459b0c6dd1ca9f0d84ba316e348f9a9837d96";
@@ -28,6 +29,15 @@ function getRepoContributors(repoOwner, repoName, cb) {
         });
 }
 
+function downloadImageByURL(url, filePath) {
+  fs.mkdirSync("./avatars");
+  request.get(url)
+      .on('error', function (err) {
+         throw err;
+      })
+      .pipe(fs.createWriteStream(filePath));
+}
+
 getRepoContributors("jquery", "jquery", function(err, result) {
   if (!err)
     console.log("Errors:", err);
@@ -35,3 +45,5 @@ getRepoContributors("jquery", "jquery", function(err, result) {
     console.log(`Avatar URL for contributor ${i}:  ${(result[i].avatar_url)}`);
   }
 });
+
+downloadImageByURL("https://avatars0.githubusercontent.com/u/1615?v=4", "./avatars/f01.jpg");

@@ -1,5 +1,5 @@
-var request = require('request');
-var fs = require('fs');
+const request = require('request');
+const fs = require('fs');
 
 const GITHUB_USER = "JohnTheScout";
 const GITHUB_TOKEN = "b33459b0c6dd1ca9f0d84ba316e348f9a9837d96";
@@ -7,7 +7,7 @@ const GITHUB_TOKEN = "b33459b0c6dd1ca9f0d84ba316e348f9a9837d96";
 console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  const requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  const requestURL = 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   
   const options = {
     url: requestURL,
@@ -16,7 +16,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
     },
   }
 
-  var contributorsJSON = "";
+  let contributorsJSON = "";
   request.get(options)
         .on("error", (err) => {
           cb(err);
@@ -48,8 +48,6 @@ getRepoContributors(process.argv[2], process.argv[3], function(err, result) {
 
   if (!fs.existsSync("./avatars"))
     fs.mkdirSync("./avatars");
-
-  
 
   for (let i = 0; i < result.length; i++) {
     //console.log(result[i]);

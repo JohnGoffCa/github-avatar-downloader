@@ -10,6 +10,16 @@ if (!fs.existsSync("./.env")) {
 }
 
 function getRepoContributors(repoOwner, repoName, cb) {
+  if (!process.env.GITHUB_USER) {
+    console.error("No user name in env file");
+    return;
+  }
+
+  if (!process.env.GITHUB_TOKEN) {
+    console.error("No user token in env file");
+    return;
+  }
+
   const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   
   const options = {
@@ -49,13 +59,18 @@ getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (err)
     console.log("Errors:", err);
 
-  if (!fs.existsSync("./avatars"))
-    fs.mkdirSync("./avatars");
-
   if (result.message === 'Not Found') {
     console.error("Repository Not Found");
     return;
   }
+
+  if (result.message === 'Bad credentials') {
+    console.error("Improper Account Credentials in env file");
+    return;
+  }
+
+  if (!fs.existsSync("./avatars"))
+    fs.mkdirSync("./avatars");
 
   for (let i = 0; i < result.length; i++) {
     //console.log(result[i]);

@@ -30,7 +30,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
 }
 
 function downloadImageByURL(url, filePath) {
-  fs.mkdirSync("./avatars");
   request.get(url)
       .on('error', function (err) {
          throw err;
@@ -39,11 +38,12 @@ function downloadImageByURL(url, filePath) {
 }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
-  if (!err)
+  if (err)
     console.log("Errors:", err);
+  if (!fs.existsSync("./avatars"))
+    fs.mkdirSync("./avatars");
   for (let i = 0; i < result.length; i++) {
-    console.log(`Avatar URL for contributor ${i}:  ${(result[i].avatar_url)}`);
+    //console.log(result[i]);
+    downloadImageByURL(result[i].avatar_url, `./avatars/${result[i].login}.jpg`);
   }
 });
-
-downloadImageByURL("https://avatars0.githubusercontent.com/u/1615?v=4", "./avatars/f01.jpg");

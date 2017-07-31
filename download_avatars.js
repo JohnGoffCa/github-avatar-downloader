@@ -75,3 +75,5 @@ getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
     downloadImageByURL(result[i].avatar_url, `./avatars/${result[i].login}.jpg`);
   }
 });
+
+module.exports = getRepoContributors;

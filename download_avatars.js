@@ -24,11 +24,14 @@ function getRepoContributors(repoOwner, repoName, cb) {
           contributorsJSON += data;
         })
         .on("end", () => {
-          cb(null, contributorsJSON);
+          cb(null, JSON.parse(contributorsJSON));
         });
 }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", JSON.stringify(JSON.parse(result), undefined, 2));
+  if (!err)
+    console.log("Errors:", err);
+  for (let i = 0; i < result.length; i++) {
+    console.log(`Avatar URL for contributor ${i}:  ${(result[i].avatar_url)}`);
+  }
 });

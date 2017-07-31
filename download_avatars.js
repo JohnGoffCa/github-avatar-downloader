@@ -1,13 +1,11 @@
 const request = require('request');
 const fs = require('fs');
-
-const GITHUB_USER = "JohnTheScout";
-const GITHUB_TOKEN = "b33459b0c6dd1ca9f0d84ba316e348f9a9837d96";
+require('dotenv').config()
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  const requestURL = 'https://' + GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+  const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   
   const options = {
     url: requestURL,
@@ -31,7 +29,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
 function downloadImageByURL(url, filePath) {
   request.get(url)
-      .on('error', function (err) {
+      .on('error', (err) => {
          throw err;
       })
       .pipe(fs.createWriteStream(filePath));
@@ -42,7 +40,7 @@ if (process.argv.length < 4) {
   return;
 }
 
-getRepoContributors(process.argv[2], process.argv[3], function(err, result) {
+getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (err)
     console.log("Errors:", err);
 

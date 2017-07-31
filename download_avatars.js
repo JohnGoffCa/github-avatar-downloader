@@ -47,6 +47,11 @@ getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (!fs.existsSync("./avatars"))
     fs.mkdirSync("./avatars");
 
+  if (result.message === 'Not Found') {
+    console.error("Repository Not Found");
+    return;
+  }
+
   for (let i = 0; i < result.length; i++) {
     //console.log(result[i]);
     downloadImageByURL(result[i].avatar_url, `./avatars/${result[i].login}.jpg`);

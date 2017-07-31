@@ -37,11 +37,20 @@ function downloadImageByURL(url, filePath) {
       .pipe(fs.createWriteStream(filePath));
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+if (process.argv.length < 4) {
+  console.log("Please provide at least two arguments, organization and repo");
+  return;
+}
+
+getRepoContributors(process.argv[2], process.argv[3], function(err, result) {
   if (err)
     console.log("Errors:", err);
+
   if (!fs.existsSync("./avatars"))
     fs.mkdirSync("./avatars");
+
+  
+
   for (let i = 0; i < result.length; i++) {
     //console.log(result[i]);
     downloadImageByURL(result[i].avatar_url, `./avatars/${result[i].login}.jpg`);

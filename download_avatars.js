@@ -4,6 +4,11 @@ require('dotenv').config()
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
+if (!fs.existsSync("./.env")) {
+  console.error("No .env file found");
+  return;
+}
+
 function getRepoContributors(repoOwner, repoName, cb) {
   const requestURL = 'https://' + process.env.GITHUB_USER + ':' + process.env.GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
   

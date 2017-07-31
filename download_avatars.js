@@ -11,19 +11,24 @@ function getRepoContributors(repoOwner, repoName, cb) {
   const options = {
     url: requestURL,
     headers: {
-      'User-Agent': "GitHub Avatar Scraper"
+      'User-Agent': "GitHub Avatar Scraper",
     },
   }
 
+  var contributorsJSON = "";
   request.get(options)
         .on("error", (err) => {
-          throw err;
+          cb(err);
         })
-        .pipe(process.stdout);
-
+        .on("data", (data) => {
+          contributorsJSON += data;
+        })
+        .on("end", () => {
+          cb(null, contributorsJSON);
+        });
 }
 
 getRepoContributors("jquery", "jquery", function(err, result) {
   console.log("Errors:", err);
-  console.log("Result:", result);
+  console.log("Result:", JSON.stringify(JSON.parse(result), undefined, 2));
 });

@@ -9,6 +9,11 @@ if (!fs.existsSync("./.env")) {
   return;
 }
 
+if (process.argv.length < 4) {
+  console.log("Please provide at least two arguments, organization and repo");
+  return;
+}
+
 function getRepoContributors(repoOwner, repoName, cb) {
   if (!process.env.GITHUB_USER) {
     console.error("No user name in env file");
@@ -50,11 +55,6 @@ function downloadImageByURL(url, filePath) {
       .pipe(fs.createWriteStream(filePath));
 }
 
-if (process.argv.length < 4) {
-  console.log("Please provide at least two arguments, organization and repo");
-  return;
-}
-
 getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (err)
     console.log("Errors:", err);
@@ -62,9 +62,7 @@ getRepoContributors(process.argv[2], process.argv[3], (err, result) => {
   if (result.message === 'Not Found') {
     console.error("Repository Not Found");
     return;
-  }
-
-  if (result.message === 'Bad credentials') {
+  } else if (result.message === 'Bad credentials') {
     console.error("Improper Account Credentials in env file");
     return;
   }
